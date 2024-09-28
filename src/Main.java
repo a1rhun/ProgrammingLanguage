@@ -117,15 +117,13 @@ class Calc {
         return result;
     }
 
+    // TODO: [Modify code of aexp() for <aexp> -> <term> { + <term> | - <term> }]
     int aexp() {
-        /* <aexp> -> <term> { '+' <term> | '-' <term> } */
+        /* expr -> term { '+' term } */
         int result = term();
-        while (token == '+' || token == '-') {  // loop 에 '-' 추가
+        while (token == '+') {
             if (token == '+') {
                 match('+');
-                result += term();
-            } else {
-                match('-');
                 result += term();
             }
 
@@ -133,22 +131,13 @@ class Calc {
         return result;
     }
 
+    // TODO: [Modify code of term() for <term> -> <factor> { * <factor> | / <factor>}]
     int term( ) {
-        /* <term> -> <factor> { '*' <factor> | '/' <factor> } */
+        /* term -> factor { '*' factor } */
         int result = factor();
-        while (token == '*' || token == '/') {
-            if (token == '*') {
-                match('*');
-                result *= factor();
-            } else {
-                match('/');
-                int divisor = factor(); // factor()로 변수에 저장
-                if (divisor != 0) { // divide to 0 예외 처리
-                    result /= divisor;
-                } else {
-                    System.err.println("Error: Division by zero");
-                }
-            }
+        while (token == '*') {
+            match('*');
+            result *= factor();
         }
         return result;
     }
