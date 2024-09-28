@@ -126,7 +126,7 @@ class Calc {
                 result += term();
             } else {
                 match('-');
-                result += term();
+                result -= term();
             }
 
         }
@@ -154,17 +154,23 @@ class Calc {
     }
 
     int factor() {
-        /* factor -> '(' expr ')' | number */
-        // TODO: Modify this code to factor -> [-] ( '(' expr ')' | number )
+        /* factor -> '-' factor | '(' expr ')' | number */
         int result = 0;
-        if (token == '(') {
+
+        // 음수 처리
+        if (token == '-') {
+            match('-');
+            result = -factor(); // factor() 재귀 호출 -> 음수 처리
+        }
+        else if (token == '(') {
             match('(');
-            result = aexp();
+            result = aexp();   // 산술 연산
             match(')');
         }
+        // 숫자 처리
         else if (token == NUMBER) {
             result = value;
-            match(NUMBER); //token = getToken();
+            match(NUMBER);
         }
         return result;
     }
