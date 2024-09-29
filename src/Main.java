@@ -104,30 +104,24 @@ class Calc {
 
             switch (op) {
                 case "<":
-                    result =  aexp1 < aexp2;
-                    break;
+                    return aexp1 < aexp2;
                 case "<=":
-                    result = aexp1 <= aexp2;
-                    break;
+                    return aexp1 <= aexp2;
                 case ">":
-                    result = aexp1 > aexp2;
-                    break;
+                    return aexp1 > aexp2;
                 case ">=":
-                    result = aexp1 >= aexp2;
-                    break;
+                    return aexp1 >= aexp2;
                 case "==":
-                    result = aexp1 == aexp2;
-                    break;
+                    return aexp1 == aexp2;
                 case "!=":
-                    result = aexp1 != aexp2;
-                    break;
+                    return aexp1 != aexp2;
                 default:
                     error();
+                    return null;
             }
         } else {
-            result =  aexp1; //  비교 연산자 없을 시 산술 결과만 반환
+            return  aexp1; //  비교 연산자 없을 시 산술 결과만 반환
         }
-        return result;
     }
 
     String relop() {
