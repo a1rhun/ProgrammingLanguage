@@ -55,10 +55,9 @@ class Calc {
 
     void command( ) {
         /* command -> expr '\n' */
-        int result = aexp();		// TODO: [Remove this line!!]
-        // Object result = expr();  // TODO: [Use this line for solution]
+        Object result = expr();  // boolean / int
         if (token == '\n') /* end the parse and print the result */
-            System.out.println(result);
+            System.out.println("The result is : " + result);
         else error();
     }
 
@@ -97,23 +96,65 @@ class Calc {
 
     Object bexp( ) {
         /* <bexp> -> <aexp> [<relop> <aexp>] */
-        Object result;
-        result = ""; // TODO: [Remove this line!!]
         int aexp1 = aexp();
-        if (token == '<' || token == '>' || token == '=' || token == '!'){ // <relop>
+        if (token == '<' || token == '>' || token == '=' || token == '!') { // <relop>
             /* Check each string using relop(): "<", "<=", ">", ">=", "==", "!=" */
-            // TODO: [Fill in your code here]
+            String op = relop();    // relop()을 통해 op에 비교연산자 저장
+            int aexp2 = aexp();
+
+            switch (op) {
+                case "<":
+                    return aexp1 < aexp2;
+                case "<=":
+                    return aexp1 <= aexp2;
+                case ">":
+                    return aexp1 > aexp2;
+                case ">=":
+                    return aexp1 >= aexp2;
+                case "==":
+                    return aexp1 == aexp2;
+                case "!=":
+                    return aexp1 != aexp2;
+                default:
+                    error();
+            }
+        } else {
+            return aexp1; //  비교 연산자 없을 시 산술 결과만 반환
         }
-        else {
-            result = aexp1;
-        }
-        return result;
+        return false;
     }
 
     String relop() {
         /* <relop> -> ( < | <= | > | >= | == | != ) */
         String result = "";
-        // TODO: [Fill in your code here]
+
+        if (token == '<') {
+            match('<');
+            if (token == '=') {
+                match('=');
+                result = "<=";
+            } else {
+                result = "<";
+            }
+        } else if (token == '>') {
+            match('>');
+            if (token == '=') {
+                match('=');
+                result = ">=";
+            } else {
+                result = ">";
+            }
+        } else if (token == '=') {
+            match('=');
+            match('=');
+            result = "==";
+        } else if (token == '!') {
+            match('!');
+            match('=');
+            result = "!=";
+        } else {
+            error();
+        }
         return result;
     }
 
