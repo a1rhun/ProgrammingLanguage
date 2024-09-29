@@ -64,30 +64,29 @@ class Calc {
     Object expr() {
         /* <expr> -> <bexp> {& <bexp> | '|'<bexp>} | !<expr> | true | false */
         Object result;
-        result = ""; // TODO: [Remove this line!!]
         if (token == '!'){
             // !<expr>
             match('!');
             result = !(boolean) expr();
-        }
-        else if (token == 't'){
+        } else if (token == 't'){
             // true
             match('t');
-            result = (boolean)true;
-        }
-        else if (token == 'f'){
+            result = true;
+        } else if (token == 'f'){
             // false
-            // TODO: [Fill in your code here]
-        }
-        else {
+            match('f');
+            result = false;
+        } else {
             /* <bexp> {& <bexp> | '|'<bexp>} */
             result = bexp();
             while (token == '&' || token == '|') {
                 if (token == '&'){
-                    // TODO: [Fill in your code here]
+                    match('&');
+                    result = (boolean)bexp() & (boolean)result;
                 }
-                else if (token == '|'){
-                    // TODO: [Fill in your code here]
+                else {
+                    match('|');
+                    result = (boolean)bexp() | (boolean)result;
                 }
             }
         }
@@ -96,6 +95,7 @@ class Calc {
 
     Object bexp( ) {
         /* <bexp> -> <aexp> [<relop> <aexp>] */
+        Object result = null;
         int aexp1 = aexp();
         if (token == '<' || token == '>' || token == '=' || token == '!') { // <relop>
             /* Check each string using relop(): "<", "<=", ">", ">=", "==", "!=" */
@@ -104,24 +104,30 @@ class Calc {
 
             switch (op) {
                 case "<":
-                    return aexp1 < aexp2;
+                    result =  aexp1 < aexp2;
+                    break;
                 case "<=":
-                    return aexp1 <= aexp2;
+                    result = aexp1 <= aexp2;
+                    break;
                 case ">":
-                    return aexp1 > aexp2;
+                    result = aexp1 > aexp2;
+                    break;
                 case ">=":
-                    return aexp1 >= aexp2;
+                    result = aexp1 >= aexp2;
+                    break;
                 case "==":
-                    return aexp1 == aexp2;
+                    result = aexp1 == aexp2;
+                    break;
                 case "!=":
-                    return aexp1 != aexp2;
+                    result = aexp1 != aexp2;
+                    break;
                 default:
                     error();
             }
         } else {
-            return aexp1; //  비교 연산자 없을 시 산술 결과만 반환
+            result =  aexp1; //  비교 연산자 없을 시 산술 결과만 반환
         }
-        return false;
+        return result;
     }
 
     String relop() {
@@ -146,12 +152,20 @@ class Calc {
             }
         } else if (token == '=') {
             match('=');
-            match('=');
-            result = "==";
+            if (token == '=') {
+                match('=');
+                result = "==";
+            } else {
+                error();
+            }
         } else if (token == '!') {
             match('!');
-            match('=');
-            result = "!=";
+            if (token == '=') {
+                match('=');
+                result = "!=";
+            } else {
+                error();
+            }
         } else {
             error();
         }
